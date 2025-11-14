@@ -1,6 +1,9 @@
 from models.atleta import Atleta
 from models.categoria import Categoria
 from models.luta import Luta
+from models.bancoDeDados import bancoDb
+
+
 
 print("### INICIANDO O CAMPEONATO ###")
 
@@ -33,6 +36,36 @@ luta_principal.finalizar_luta(
     tempo_min=5.00
 )
 
+def start():
+    """
+    Função para Iniciar o programa
+    """
+ 
+    try:
+
+            conec = bancoDb('jj2.db')
+            conec.conectar()
+
+            conec.criarTabelas()
+            conec.limparDados()
+            conec.inserir_categorias()
+            conec.inserir_academia()
+            conec.inserir_atetlas()
+
+            print('-' * 50)
+            conec.mostrar_atletas()
+
+
+
+
+    finally:
+        print("\033[32mPrograma Instalado e em Execução!\033[0m")
+
+start() 
+
+
 # 4. Visualização Final da Luta
 print("\n--- DETALHES DA LUTA FINAL ---")
 print(luta_principal)
+
+
