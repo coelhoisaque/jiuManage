@@ -1,193 +1,173 @@
-# 🥋 Jiu-Manager - Sistema Completo de Gestão para Jiu-Jitsu
+# 🥋  Jiu-Manage – Sistema de Gerenciamento
 
-Sistema para gerenciamento de academias, atletas, categorias e competições de Jiu-Jitsu. Desenvolvido em Python com banco de dados SQLite e interface interativa.
----
-
-## **Funcionalidades**
-
-### **Gestão de Atletas**
-- 📝 Cadastro com validação de CPF
-- 👀 Listagem completa
-- ✏️ Atualização de dados
-- 🗑️ Remoção segura
-
-### **Gestão de Academias**
-- 🏢 Listagem de academias cadastradas
-- 🔗 Associação automática de atletas
-
-### **Gestão de Categorias**
--  Categorias por peso e sexo
-   Consulta de limites e regras
-
-### **Segurança**
-- 🔐 Login com usuário e senha
-- 👤 Usuário padrão: `admin` / `admin`
+Sistema completo para cadastro, gerenciamento e simulação de um campeonato de Jiu-Jitsu, incluindo **atletas, academias, categorias, inscrições e lutas**, com banco de dados SQLite e classes Python orientadas a objetos.
 
 ---
 
-## **Estrutura do Projeto**
+##  **Descrição do Projeto**
+
+Este projeto tem como objetivo fornecer uma aplicação simples, modular e extensível para gerenciamento de campeonatos de Jiu-Jitsu.
+O sistema inclui:
+
+* Cadastro automático de **academias**, **atletas** e **categorias**;
+* Simulação estruturada de lutas com pontuação;
+* Registro de resultados no banco de dados;
+* Exibição de todos os dados cadastrados;
+* Criação automática do banco SQLite com todas as tabelas necessárias.
+
+Toda a estrutura foi projetada com **classes separadas** (Atleta, Categoria, Luta, bancoDb), facilitando manutenção e expansão.
+
+---
+
+##  **Estrutura de Arquivos**
 
 ```
-jiuManager/
-├── main.py                      # Sistema principal interativo
-├── models/
-│   ├── bancoDeDados.py          # Gerenciamento do banco SQLite
-│   ├── atleta.py               # Modelo com properties
-│   ├── categoria.py            # Modelo com validações
-│   └── luta.py                 # Sistema de lutas (próxima versão)
-└── README.md                   
-```
+jiuManage
+├── main.py
+├── models
+│   ├── atleta.py
+│   ├── bancoDeDados.py
+│   ├── categoria.py
+│   └── luta.py
+└── README.md
+``` 
+
 
 ---
 
-## **Instalação e Execução**
+##  **Banco de Dados**
 
-### **Pré-requisitos**
+O sistema utiliza **SQLite**, criando automaticamente as seguintes tabelas:
+
+* **Atleta**
+* **Categoria**
+* **Lutas**
+* **Academia**
+* **Inscricoes**
+
+Cada tabela contém campos essenciais para organização do campeonato.
+
+---
+
+## ⚙️ **Funcionalidades Principais**
+
+### Cadastro automático inicial:
+
+* Categorias por peso, faixa e sexo
+* Academias com CNPJ e telefone
+* Atletas iniciais (exemplo)
+
+### CRUD básico (implícito nas classes):
+
+* Inserir Atletas
+* Inserir Categorias
+* Registrar Lutas
+* Mostrar dados completos do banco
+
+### Simulação de Lutas
+
+* Registro de pontos
+* Registro de vantagens
+* Registro de punições
+* Definição de vencedor e método
+* Salvamento do resultado
+
+---
+
+## **Como Executar o Projeto**
+
+### 1. Clone este repositório:
+
 ```bash
-Python 3.8+
-SQLite (incluído no Python)
-```
-
-### **Primeira Execução**
-```bash
-# Clone o repositório
 git clone <url-do-repositorio>
-cd jiu-manager-pro
-
-# Execute o sistema
-python main.py
-
-# Credenciais iniciais
-Usuário: admin
-Senha: admin
+cd <nome-do-projeto>
 ```
 
----
+### 2. Execute o arquivo principal:
 
-## **Como Usar**
-
-### **1. Login no Sistema**
-- Execute `python main.py`
-- Digite usuário e senha
-
-### **2. Menu Principal**
-```
-=== Menu ===
-1 - Cadastrar Atleta
-2 - Listar Atletas  
-3 - Atualizar Atleta
-4 - Remover Atleta
-5 - Listar Categorias
-6 - Listar Academias
-0 - Sair
-```
-
-### **3. Cadastro de Atleta**
-- Nome completo
-- CPF (com validação automática)
-- Data de nascimento (dd/mm/aaaa)
-- Equipe
-- Faixa
-- Peso (kg)
-- Academia (seleção da lista)
-
----
-
-## **Banco de Dados**
-
-### **Tabelas Principais**
-```sql
-Atleta (id_atleta, nome, cpf, data_nascimento, equipe, faixa, peso, id_academia)
-Categoria (id_peso, categoria_peso, limite_peso, sexo) 
-Academia (id_academia, nome_academia, CNPJ, telefone)
-Usuario (id_user, username, senha_hash, salt)
-```
-
-### **Dados Iniciais**
-- **12 academias** pré-cadastradas
-- **9 categorias** de peso (masculino/feminino)
-- **Usuário admin** criado automaticamente
-
----
-
-## **Desenvolvimento**
-
-### **Validações Implementadas**
-```python
-# CPF válido (algoritmo oficial)
-def cpf_valido(cpf)
-
-# Campos não vazios  
-def solicitar_nao_vazio(msg)
-
-# Números positivos
-def solicitar_float_positivo(msg)
-
-# Opções válidas no menu
-def solicitar_int_opcao(msg, opcoes)
-```
-
-### **Models com Properties**
-```python
-class Atleta:
-    @property
-    def nome(self):
-        return self._nome
-        
-    @nome.setter 
-    def nome(self, value):
-        self._nome = value.strip()  # Auto-trim
-```
-
----
-
-##  **Solução de Problemas**
-
-### **Problemas Comuns**
 ```bash
-# "Credenciais inválidas"
-Verifique se digitou admin/admin
-
-# Erro de banco de dados
-Delete jj2.db e execute novamente
-
-# CPF não aceito
-Digite com ou sem pontuação, o sistema valida
+python3 main.py
 ```
 
-### **Comandos Úteis**
-```python
-# Reset completo
-from models.bancoDeDados import bancoDb
-db = bancoDb('jj2.db')
-db.conectar()
-db.limparDados()
+O sistema irá:
+
+1. Criar o banco SQLite se ele ainda não existir
+2. Criar atletas, categorias, academias e lutas de exemplo
+3. Simular uma luta
+4. Exibir resultados no console
+
+---
+
+##  **Requisitos**
+
+```bash
+# Nenhuma dependência externa
+# Python 3.8+
+python3 --version
+
+# SQLite (já incluído no Python)
+python3 -c "import sqlite3; print('SQLite OK')"
 ```
 
 ---
 
-## **Contribuição**
+## **Classes Principais**
 
-1. Fork o projeto
-2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
-3. Commit: `git commit -m 'Add nova funcionalidade'`
-4. Push: `git push origin feature/nova-funcionalidade`
-5. Abra um Pull Request
+### 🥋 `Atleta`
+
+Representa um competidor:
+
+* Nome
+* Faixa
+* Peso
+* Equipe
+* Pontuação da luta
+
+### 🧮 `Categoria`
+
+* Nome
+* Faixa mínima
+* Peso limite
+* Sexo
+
+### ⚔️ `Luta`
+
+* Atleta 1
+* Atleta 2
+* Pontos / Vantagens / Punições
+* Método de vitória
+* Fase (Ex: final)
+
+### 🗄️ `bancoDb`
+
+* Criação de tabelas
+* Inserções iniciais
+* Inserções permanentes
+* Consultas gerais
 
 ---
 
-## **Licença**
+## 📘 **Exemplo de Saída (Simulação)**
 
-Este projeto é livre para uso educacional e acadêmico.
+```
+### INICIANDO O CAMPEONATO ###
+✓ Conectado ao banco de dados
+Criando tabelas...
+✓ Categorias cadastradas
+✓ Academias cadastradas
+✓ Atletas cadastrados
+✓ Banco de dados inicializado com sucesso!
+
+--- LUTA CRIADA ---
+Carlos Silva vs João Pereira – Final
+
+Simulando Pontuação...
+✓ Luta finalizada: Carlos Silva venceu por Pontos (6 vs 3)
+```
+
 
 ---
 
-## **Suporte**
+## 📄 **Licença**
 
-Encontrou um problema? Abra uma issue no repositório com:
-- Descrição do erro
-- Passos para reproduzir
-- Screenshots (se aplicável)
-
-**Commit sugerido:** `feat: implementar sistema completo CRUD com autenticação e validações`
-
+Este projeto é de uso livre para fins educacionais.

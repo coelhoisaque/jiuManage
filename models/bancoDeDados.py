@@ -1,7 +1,4 @@
 import sqlite3
-import hashlib
-import os
-import datetime
 
 class bancoDb:
 
@@ -37,18 +34,20 @@ class bancoDb:
             print('[Criando tabela Atletas]....')
             print('////....')
             cur.execute("""
-                    CREATE TABLE IF NOT EXISTS Atleta (
-                        id_atleta INTEGER PRIMARY KEY AUTOINCREMENT,
-                        nome TEXT NOT NULL,
-                        cpf TEXT NOT NULL UNIQUE,
-                        data_nascimento TEXT NOT NULL,
-                        equipe TEXT,
-                        faixa TEXT NOT NULL,
-                        peso REAL,
-                        id_academia INTEGER,
-                        data_inscricao TEXT,
-                        FOREIGN KEY (id_academia) REFERENCES Academia(id_academia)
+                    CREATE TABLE "Atleta" (
+                        "id_atleta"	INTEGER,
+                        "nome"	TEXT NOT NULL,
+                        "cpf"	TEXT NOT NULL,
+                        "data_nascimento"	TEXT NOT NULL,
+                        "equipe"	TEXT,
+                        "faixa"	TEXT NOT NULL,
+                        "peso"	INT,
+                        "id_academia"	INT,
+                        "data_inscricao"	TEXT,
+                        UNIQUE("cpf"),
+                        PRIMARY KEY("id_atleta" AUTOINCREMENT)
                     )
+
                         """)
         except sqlite3.Error as xy:
             print(f"\033[31mDeu erro mano: {xy}\033[0m")
@@ -85,16 +84,14 @@ class bancoDb:
             cur.execute("""
                         CREATE TABLE IF NOT EXISTS Lutas 
                         ( 
-                        id_luta INTEGER PRIMARY KEY AUTOINCREMENT,
-                        id_categoria INTEGER,
-                        atleta1 INTEGER,
-                        atleta2 INTEGER,
-                        resultado TEXT,
-                        data TEXT,
-                        FOREIGN KEY (id_categoria) REFERENCES Categoria(id_peso),
-                        FOREIGN KEY (atleta1) REFERENCES Atleta(id_atleta),
-                        FOREIGN KEY (atleta2) REFERENCES Atleta(id_atleta)
+                        id_luta INTEGER PRIMARY KEY AUTOINCREMENT,  
+                        atleta1 VARCHAR(255),  
+                        atleta2 VARCHAR(255),  
+                        resultado INT  
                         ); 
+
+                    
+
                         """)
         except sqlite3.Error as xy:
             print(f"\033[31mDeu erro mano: {xy}\033[0m")
@@ -121,25 +118,6 @@ class bancoDb:
             print(f"\033[31mDeu erro mano: {e}\033[0m")
         finally:
             print("Tabela Academia Criada com Sucesso!")
-            print("##################################")
-
-        # Tabela de usuários
-        try:
-            print('[Criando tabela Usuario]....')
-            print('////....')
-            cur.execute("""
-                CREATE TABLE IF NOT EXISTS Usuario (
-                    id_user INTEGER PRIMARY KEY AUTOINCREMENT,
-                    username TEXT NOT NULL UNIQUE,
-                    senha_hash TEXT NOT NULL,
-                    salt TEXT NOT NULL,
-                    created_at TEXT
-                )
-            """)
-        except sqlite3.Error as e:
-            print(f"\033[31mDeu erro mano: {e}\033[0m")
-        finally:
-            print("Tabela Usuario Criada com Sucesso!")
             print("##################################")
 
     #criar tabela Inscrições
@@ -189,17 +167,17 @@ class bancoDb:
     def inserir_academia(self):
         cur = self.cursor()
 
-        Academias = [('Leões Academy', '14.888.0001/15', '77997506765'),
-                    ('Lobos Academy', '14.888.0002/15', '77998206764'),
-                    ('Ferozes', '14.888.0003/15', '77998556767'),
-                    ('Conquista', '14.888.0004/15', '77998526768'),
-                    ('Lutadores do Cão', '14.858.0001/15', '77985506664'),
-                    ('Dedicados', '14.888.0001/65', '77998586264'),
-                    ('Rocha Rocha', '14.888.0001/75', '77999156764'),
-                    ('Santos Academy', '14.888.0001/18', '77994586364'),
-                    ('SP Academy', '14.888.0001/19', '77998503175'),
-                    ('Brazil Academy', '14.888.0001/10', '77966906764'),
-                    ('JJ Academy', '14.888.0001/11', '779986067729'),
+        Academias = [('Leões Academy', '14.888.0001/15', '77998506765'),
+                    ('Lobos Academy', '14.888.0001/15', '77998506764'),
+                    ('Ferozes', '14.888.0001/15', '77998506767'),
+                    ('Conquista', '14.888.0001/15', '77998506768'),
+                    ('Lutadores do Cão', '14.888.0001/15', '77998506664'),
+                    ('Dedicados', '14.888.0001/15', '77998506364'),
+                    ('Rocha Rocha', '14.888.0001/15', '77998306764'),
+                    ('Santos Academy', '14.888.0001/15', '77996506364'),
+                    ('SP Academy', '14.888.0001/15', '77998503764'),
+                    ('Brazil Academy', '14.888.0001/15', '77968506764'),
+                    ('JJ Academy', '14.888.0001/15', '77998606764'),
 
                     ]
         
@@ -282,74 +260,4 @@ class bancoDb:
             cur.execute("DELETE FROM sqlite_sequence WHERE name IN ('Atleta', 'Categoria', 'Lutas', 'Inscricoes');")
 
             print('DADOS LIMPOS')
-
-    def criar_usuario(self, username, senha):
-        cur = self.cursor()
-        salt = os.urandom(16).hex()
-        senha_hash = hashlib.sha256((salt + senha).encode()).hexdigest()
-        try:
-            cur.execute(
-                "INSERT INTO Usuario (username, senha_hash, salt, created_at) VALUES (?,?,?,?)",
-                (username, senha_hash, salt, datetime.datetime.now().isoformat())
-            )
-            self.conn.commit()
-        except sqlite3.IntegrityError:
-            pass
-
-    def autenticar_usuario(self, username, senha):
-        cur = self.cursor()
-        cur.execute("SELECT senha_hash, salt FROM Usuario WHERE username=?", (username,))
-        row = cur.fetchone()
-        if not row:
-            return False
-        senha_hash = hashlib.sha256((row["salt"] + senha).encode()).hexdigest()
-        return senha_hash == row["senha_hash"]
-
-    def criar_atleta(self, nome, cpf, data_nascimento, equipe, faixa, peso, id_academia, data_inscricao=None):
-        cur = self.cursor()
-        data_inscricao_str = data_inscricao or datetime.datetime.now().strftime('%d/%m/%Y')
-        cur.execute(
-            """
-            INSERT INTO Atleta (nome, cpf, data_nascimento, equipe, faixa, peso, id_academia, data_inscricao)
-            VALUES (?,?,?,?,?,?,?,?)
-            """,
-            (nome, cpf, data_nascimento, equipe, faixa, peso, id_academia, data_inscricao_str)
-        )
-        self.conn.commit()
-
-    def atualizar_atleta(self, id_atleta, nome=None, faixa=None, peso=None, equipe=None, id_academia=None):
-        cur = self.cursor()
-        fields = []
-        values = []
-        if nome is not None:
-            fields.append("nome=?"); values.append(nome)
-        if faixa is not None:
-            fields.append("faixa=?"); values.append(faixa)
-        if peso is not None:
-            fields.append("peso=?"); values.append(peso)
-        if equipe is not None:
-            fields.append("equipe=?"); values.append(equipe)
-        if id_academia is not None:
-            fields.append("id_academia=?"); values.append(id_academia)
-        if not fields:
-            return
-        values.append(id_atleta)
-        sql = "UPDATE Atleta SET " + ", ".join(fields) + " WHERE id_atleta=?"
-        cur.execute(sql, tuple(values))
-        self.conn.commit()
-
-    def remover_atleta(self, id_atleta):
-        cur = self.cursor()
-        cur.execute("DELETE FROM Atleta WHERE id_atleta=?", (id_atleta,))
-        self.conn.commit()
-
-    def obter_atletas(self):
-        cur = self.cursor()
-        cur.execute("SELECT * FROM Atleta ORDER BY id_atleta")
-        return cur.fetchall()
-
-    def obter_academias(self):
-        cur = self.cursor()
-        cur.execute("SELECT * FROM Academia ORDER BY id_academia")
-        return cur.fetchall()
         

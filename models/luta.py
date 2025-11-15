@@ -29,14 +29,14 @@ class Luta:
       elif tipo == 'Vantagem':
         self.atleta1.vantagens += 1
       elif tipo == 'Punicao':
-        self.atleta1.punicoes += 1
+        self.atleta1.puniçoes += 1
     elif atleta_id_arg == self.atleta2.id_atleta:
       if tipo == 'Ponto':
         self.atleta2.pontuacao += pontos
       elif tipo == 'Vantagem':
         self.atleta2.vantagens += 1
       elif tipo == 'Punicao':
-        self.atleta2.punicoes += 1
+        self.atleta2.puniçoes += 1
     else:
       print("Atleta não encontrado na luta.")
 
