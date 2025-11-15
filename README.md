@@ -25,7 +25,7 @@ Sistema para gerenciamento de academias, atletas, categorias e competições de 
 
 ---
 
-## 🏗️ **Estrutura do Projeto**
+## **Estrutura do Projeto**
 
 ```
 jiuManager/
@@ -64,7 +64,7 @@ Senha: admin
 
 ---
 
-## 🎯 **Como Usar**
+## **Como Usar**
 
 ### **1. Login no Sistema**
 - Execute `python main.py`
@@ -166,7 +166,7 @@ db.limparDados()
 
 ---
 
-## 👥 **Contribuição**
+## **Contribuição**
 
 1. Fork o projeto
 2. Crie uma branch: `git checkout -b feature/nova-funcionalidade`
@@ -176,13 +176,13 @@ db.limparDados()
 
 ---
 
-## 📄 **Licença**
+## **Licença**
 
 Este projeto é livre para uso educacional e acadêmico.
 
 ---
 
-## 🆘 **Suporte**
+## **Suporte**
 
 Encontrou um problema? Abra uma issue no repositório com:
 - Descrição do erro
